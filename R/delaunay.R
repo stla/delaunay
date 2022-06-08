@@ -89,7 +89,9 @@
 #'   Delaunay triangulation, given as an integer matrix with two columns (each
 #'   row provides the indices of the two points forming the edge);
 #'   \code{NULL} for no constraint
-#' @param quick3d Boolean, XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#' @param quick3d Boolean, for 3D only; if \code{FALSE}, there is more 
+#'   information in the output about the Delaunay tessellation; see the 
+#'   \strong{Value} section for details
 #'
 #' @return The Delaunay tessellation.
 #' \itemize{
@@ -133,19 +135,23 @@
 #'         field represents the edges of these triangles. The \code{volume}
 #'         field provides only one number, the volume of the tessellation,
 #'         in other words the volume of the convex hull of the given points.
-#'         The \code{cells} field is a list of lists. Each sublist is composed
-#'         of three fields: \code{cell} provides the indices of the four
-#'         vertices of the corresponding tetrahedron, \code{faces} provides the
-#'         indices of the four faces of the tetrahedron, that is to say the row
-#'         number of the \code{facets} field which represents this face, and
-#'         finally there is a \code{volume} field which provides the volume of
-#'         the tetrahedron. The \code{facets} field is an integer matrix with
-#'         four columns. The three first integers of a row are the indices of
-#'         the points which form the corresponding facet. The fourth column,
-#'         named \code{onhull} is composed of zeros and ones only, and a
-#'         \code{1} means that the corresponding facet lies on the convex hull
-#'         of the points. The \code{edges} field contains an integer matrix
-#'         with three columns. Each row represents an edge, given by the two
+#'         If \code{quick3d=TRUE}, then \code{cells}, \code{facets} and 
+#'         \code{edges} are integer matrices with four, three, and two 
+#'         columns respectively; each integer is a vertex index. 
+#'         If \code{quick3d=FALSE}, the \code{cells} field is a list of lists. 
+#'         Each sublist is composed of three fields: \code{cell} provides the 
+#'         indices of the four vertices of the corresponding tetrahedron, 
+#'         \code{faces} provides the indices of the four faces of the 
+#'         tetrahedron, that is to say the row number of the \code{facets} 
+#'         field which represents this face, and finally there is a 
+#'         \code{volume} field which provides the volume of the tetrahedron. 
+#'         The \code{facets} field is an integer matrix with four columns. 
+#'         The three first integers of a row are the indices of the points 
+#'         which form the corresponding facet. The fourth column, named 
+#'         \code{onhull} is composed of zeros and ones only, and a \code{1} 
+#'         means that the corresponding facet lies on the convex hull of the 
+#'         points. The \code{edges} field contains an integer matrix with 
+#'         three columns. Each row represents an edge, given by the two
 #'         indices of the points which form this edge, and the third integer,
 #'         in the column named \code{onhull} is a \code{0/1} indicator of
 #'         whether the edge lies on the convex hull. Finally the \code{volume}
