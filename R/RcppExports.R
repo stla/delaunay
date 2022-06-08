@@ -13,6 +13,10 @@ del3D_cpp <- function(pts) {
     .Call(`_delaunay_del3D_cpp`, pts)
 }
 
+del3D_cpp_hullinfo <- function(pts) {
+    .Call(`_delaunay_del3D_cpp_hullinfo`, pts)
+}
+
 delXY_cpp <- function(pts) {
     .Call(`_delaunay_delXY_cpp`, pts)
 }

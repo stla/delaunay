@@ -89,6 +89,7 @@
 #'   Delaunay triangulation, given as an integer matrix with two columns (each
 #'   row provides the indices of the two points forming the edge);
 #'   \code{NULL} for no constraint
+#' @param quick3d Boolean, XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #'
 #' @return The Delaunay tessellation.
 #' \itemize{
@@ -185,9 +186,10 @@
 #' #   approximate the integral of the function:
 #' del[["volume"]]
 delaunay <- function(
-    points, elevation = FALSE, constraints = NULL
+    points, elevation = FALSE, constraints = NULL, quick3d = FALSE
 ){
   stopifnot(isBoolean(elevation))
+  stopifnot(isBoolean(quick3d))
   if(!is.matrix(points) || !is.numeric(points)){
     stop("The `points` argument must be a numeric matrix.", call. = TRUE)
   }
@@ -297,7 +299,11 @@ delaunay <- function(
         "area"        = sum(areas)
       )
     }else{
-      out <- del3D_cpp(tpoints)
+      if(quick3d){
+        out <- del3D_cpp(tpoints)  
+      }else{
+        out <- del3D_cpp_hullinfo(tpoints)
+      }
     }
   }
   class(out) <- "delaunay"

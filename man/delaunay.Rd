@@ -4,7 +4,7 @@
 \alias{delaunay}
 \title{Delaunay tessellation}
 \usage{
-delaunay(points, elevation = FALSE, constraints = NULL)
+delaunay(points, elevation = FALSE, constraints = NULL, quick3d = FALSE)
 }
 \arguments{
 \item{points}{numeric matrix which stores the points, one point per row}
@@ -18,6 +18,8 @@ elevations; see the example}
 Delaunay triangulation, given as an integer matrix with two columns (each
 row provides the indices of the two points forming the edge);
 \code{NULL} for no constraint}
+
+\item{quick3d}{Boolean, XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX}
 }
 \value{
 The Delaunay tessellation.

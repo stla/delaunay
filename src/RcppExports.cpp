@@ -45,6 +45,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// del3D_cpp_hullinfo
+Rcpp::List del3D_cpp_hullinfo(Rcpp::NumericMatrix pts);
+RcppExport SEXP _delaunay_del3D_cpp_hullinfo(SEXP ptsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type pts(ptsSEXP);
+    rcpp_result_gen = Rcpp::wrap(del3D_cpp_hullinfo(pts));
+    return rcpp_result_gen;
+END_RCPP
+}
 // delXY_cpp
 Rcpp::List delXY_cpp(Rcpp::NumericMatrix pts);
 RcppExport SEXP _delaunay_delXY_cpp(SEXP ptsSEXP) {
@@ -61,6 +72,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_delaunay_del2D_cpp", (DL_FUNC) &_delaunay_del2D_cpp, 1},
     {"_delaunay_del2DC_cpp", (DL_FUNC) &_delaunay_del2DC_cpp, 2},
     {"_delaunay_del3D_cpp", (DL_FUNC) &_delaunay_del3D_cpp, 1},
+    {"_delaunay_del3D_cpp_hullinfo", (DL_FUNC) &_delaunay_del3D_cpp_hullinfo, 1},
     {"_delaunay_delXY_cpp", (DL_FUNC) &_delaunay_delXY_cpp, 1},
     {NULL, NULL, 0}
 };
