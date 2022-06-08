@@ -94,6 +94,7 @@ Rcpp::List del3D_cpp(Rcpp::NumericMatrix pts) {
     Rcpp::CharacterVector rowNames =
         Rcpp::CharacterVector::create("i1", "i2", "onhull");
     Rcpp::rownames(Edges) = rowNames;
+    Edges = Rcpp::transpose(Edges);
     Edges.attr("info") =
         "The `onhull` column indicates whether the edge is on the convex hull.";
   }
@@ -130,6 +131,8 @@ Rcpp::List del3D_cpp(Rcpp::NumericMatrix pts) {
   }
   //
   return Rcpp::List::create(
-      Rcpp::Named("cells") = Cells, Rcpp::Named("facets") = Facets,
-      Rcpp::Named("edges") = Edges, Rcpp::Named("volume") = totalVolume);
+      Rcpp::Named("cells") = Cells, 
+      Rcpp::Named("facets") = Rcpp::transpose(Facets),
+      Rcpp::Named("edges") = Edges, 
+      Rcpp::Named("volume") = totalVolume);
 }

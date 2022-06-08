@@ -15,7 +15,7 @@ Rcpp::List del2D_cpp(Rcpp::NumericMatrix pts) {
   //
   const size_t nfaces = mesh.number_of_faces();
   const size_t h =
-    2 * npoints - 2 - nfaces;  // number of vertices of convex hull
+      2 * npoints - 2 - nfaces;  // number of vertices of convex hull
   const size_t nedges = 3 * npoints - 3 - h;
   //
   Rcpp::IntegerMatrix Faces(3, nfaces);
@@ -36,7 +36,7 @@ Rcpp::List del2D_cpp(Rcpp::NumericMatrix pts) {
   {
     int i = 0;
     for(DT2D::Finite_edges_iterator eit = itedges.begin(); eit != itedges.end();
-    eit++) {
+        eit++) {
       const std::pair<DT2D::Face_handle, int> edge = *eit;
       const int i0 = edge.first->vertex((edge.second + 1) % 3)->info();
       const int i1 = edge.first->vertex((edge.second + 2) % 3)->info();
@@ -48,4 +48,3 @@ Rcpp::List del2D_cpp(Rcpp::NumericMatrix pts) {
   return Rcpp::List::create(Rcpp::Named("faces") = Faces,
                             Rcpp::Named("edges") = Edges);
 }
-

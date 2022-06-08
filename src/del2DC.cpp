@@ -47,8 +47,8 @@ void mark_domains(CDT& cdt) {
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix del2d_constrained_cpp(Rcpp::NumericMatrix pts,
-                                          Rcpp::IntegerMatrix edges) {
+Rcpp::IntegerMatrix del2DC_cpp(Rcpp::NumericMatrix pts,
+                               Rcpp::IntegerMatrix edges) {
   const int npoints = pts.ncol();
   std::vector<std::pair<CDT::Point, int>> points(npoints);
   for(int i = 0; i < npoints; ++i) {

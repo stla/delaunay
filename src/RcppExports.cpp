@@ -11,18 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// del2d_constrained_cpp
-Rcpp::IntegerMatrix del2d_constrained_cpp(Rcpp::NumericMatrix pts, Rcpp::IntegerMatrix edges);
-RcppExport SEXP _delaunay_del2d_constrained_cpp(SEXP ptsSEXP, SEXP edgesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type pts(ptsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
-    rcpp_result_gen = Rcpp::wrap(del2d_constrained_cpp(pts, edges));
-    return rcpp_result_gen;
-END_RCPP
-}
 // del2D_cpp
 Rcpp::List del2D_cpp(Rcpp::NumericMatrix pts);
 RcppExport SEXP _delaunay_del2D_cpp(SEXP ptsSEXP) {
@@ -31,6 +19,18 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type pts(ptsSEXP);
     rcpp_result_gen = Rcpp::wrap(del2D_cpp(pts));
+    return rcpp_result_gen;
+END_RCPP
+}
+// del2DC_cpp
+Rcpp::IntegerMatrix del2DC_cpp(Rcpp::NumericMatrix pts, Rcpp::IntegerMatrix edges);
+RcppExport SEXP _delaunay_del2DC_cpp(SEXP ptsSEXP, SEXP edgesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type pts(ptsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type edges(edgesSEXP);
+    rcpp_result_gen = Rcpp::wrap(del2DC_cpp(pts, edges));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -58,8 +58,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_delaunay_del2d_constrained_cpp", (DL_FUNC) &_delaunay_del2d_constrained_cpp, 2},
     {"_delaunay_del2D_cpp", (DL_FUNC) &_delaunay_del2D_cpp, 1},
+    {"_delaunay_del2DC_cpp", (DL_FUNC) &_delaunay_del2DC_cpp, 2},
     {"_delaunay_del3D_cpp", (DL_FUNC) &_delaunay_del3D_cpp, 1},
     {"_delaunay_delXY_cpp", (DL_FUNC) &_delaunay_delXY_cpp, 1},
     {NULL, NULL, 0}
