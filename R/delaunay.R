@@ -243,7 +243,7 @@ delaunay <- function(
     if(any(cstr_col1 == cstr_col2)){
       stop("There are some invalid constraints.", call. = TRUE)
     }
-    triangles <- del2DC_cpp(points, constraints)
+    triangles <- del2DC_cpp(tpoints, t(constraints))
     # edges <- apply(triangles, 1L, function(x){
     #   rbind(c(x[1L], x[2L]), c(x[1L], x[3L]), c(x[2L], x[3L]))
     # }, simplify = FALSE)
