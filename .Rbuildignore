@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^inst/benchmarks$
+^LICENSE$
+^\.github$
+^inst/essais$
