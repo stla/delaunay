@@ -249,15 +249,15 @@ delaunay <- function(
     # }, simplify = FALSE)
     # edges <- do.call(rbind, edges)
     # edges <- edges[!duplicated(edges), ]
-    rglfake <- list(vb = rbind(tpoints, 1), it = t(triangles))
+    rglfake <- list(vb = rbind(tpoints, 1), it = triangles)
     class(rglfake) <- "mesh3d"
     out <- list(
-      "faces"       = triangles,
+      "faces"       = t(triangles),
       "edges"       = `colnames<-`(as.matrix(
         vcgGetEdge(rglfake))[, c(1L, 2L, 4L)], c("v1", "v2", "border")
       ),
       "constraints" = constraints,
-      "area"        = delaunayArea(points, triangles)
+      "area"        = delaunayArea(points, t(triangles))
     )
     attr(out, "constrained") <- TRUE
   }else if(dimension == 2L && is.null(constraints)){
@@ -597,7 +597,7 @@ mesh2d <- function(triangulation){
 #' @export
 #' @importFrom randomcoloR randomColor distinctColorPalette
 #' @importFrom utils combn
-#' @importFrom rgl triangles3d
+#' @importFrom rgl triangles3d lines3d
 #'
 #' @examples library(delaunay)
 #' pts <- rbind(
