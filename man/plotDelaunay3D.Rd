@@ -9,7 +9,8 @@ plotDelaunay3D(
   color = "distinct",
   hue = "random",
   luminosity = "light",
-  alpha = 0.3
+  alpha = 0.3,
+  ...
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ plotDelaunay3D(
 to \code{\link[randomcoloR]{randomColor}}}
 
 \item{alpha}{opacity, number between 0 and 1}
+
+\item{...}{arguments passed to \code{\link[rgl]{material3d}}}
 }
 \value{
 No value, just renders a 3D plot.

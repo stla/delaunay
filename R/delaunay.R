@@ -310,9 +310,11 @@ delaunay <- function(
       attr(out, "dimension") <- 2.5
     }else{
       if(quick3d){
-        out <- del3D_cpp(tpoints)  
+        out <- del3D_cpp(tpoints) 
+        attr(out, "hullinfo") <- FALSE
       }else{
         out <- del3D_cpp_hullinfo(tpoints)
+        attr(out, "hullinfo") <- TRUE
       }
       attr(out, "dimension") <- 3
     }
@@ -645,12 +647,13 @@ mesh2d <- function(triangulation){
 #' @param hue,luminosity if \code{color="random"}, these arguments are passed
 #'   to \code{\link[randomcoloR]{randomColor}}
 #' @param alpha opacity, number between 0 and 1
+#' @param ... arguments passed to \code{\link[rgl]{material3d}}
 #'
 #' @return No value, just renders a 3D plot.
 #' @export
 #' @importFrom randomcoloR randomColor distinctColorPalette
 #' @importFrom utils combn
-#' @importFrom rgl triangles3d lines3d
+#' @importFrom rgl triangles3d lines3d points3d material3d
 #'
 #' @examples library(delaunay)
 #' pts <- rbind(
@@ -669,7 +672,7 @@ mesh2d <- function(triangulation){
 #' plotDelaunay3D(tess)
 plotDelaunay3D <- function(
     tessellation, color = "distinct", hue = "random", luminosity = "light",
-    alpha = 0.3
+    alpha = 0.3, ...
 ){
   if(!inherits(tessellation, "delaunay")){
     stop(
@@ -683,6 +686,9 @@ plotDelaunay3D <- function(
       sprintf("Invalid dimension (%d instead of 3).", ncol(vertices)),
       call. = TRUE
     )
+  }
+  if(length(list(...))){
+    mater3d <- material3d(...)
   }
   cells <- tessellation[["cells"]]
   ntetrahedra <- length(cells)
@@ -707,11 +713,30 @@ plotDelaunay3D <- function(
     }
   }
   edges <- tessellation[["edges"]]
-  for(i in 1L:nrow(edges)){
-    edge <- edges[i, ]
-    p1 <- vertices[edge[1L], ]
-    p2 <- vertices[edge[2L], ]
-    lines3d(rbind(p1, p2), color = "black")
+  if(attr(tessellation, "hullinfo")){
+    for(i in 1L:nrow(edges)){
+      edge <- edges[i, ]
+      onhull <- edge[3L]
+      p1 <- vertices[edge[1L], ]
+      p2 <- vertices[edge[2L], ]
+      lines3d(
+        rbind(p1, p2), 
+        color = ifelse(onhull, "black", "darkgrey"),
+        lwd = ifelse(onhull, 4, 3)
+      )
+    }
+    onhull <- unique(c(edges[edges[, 3L] == 1L, ]))
+    points3d(vertices[onhull, ], size = 3)
+  }else{
+    for(i in 1L:nrow(edges)){
+      edge <- edges[i, ]
+      p1 <- vertices[edge[1L], ]
+      p2 <- vertices[edge[2L], ]
+      lines3d(rbind(p1, p2), color = "black")
+    }
+  }
+  if(length(list(...))){
+    material3d(mater3d)
   }
   invisible(NULL)
 }
