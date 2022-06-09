@@ -268,6 +268,7 @@ delaunay <- function(
       "area"        = delaunayArea(points, t(triangles))
     )
     attr(out, "constrained") <- TRUE
+    attr(out, "dimension") <- 2
   }else if(dimension == 2L && is.null(constraints)){
     out <- del2D_cpp(tpoints)
     triangles <- out[["faces"]]
@@ -278,6 +279,8 @@ delaunay <- function(
     out[["edges"]] <- `colnames<-`( # replace the cpp out$edges
       as.matrix(vcgGetEdge(rglfake))[, -3L], c("v1", "v2", "border")
     )
+    attr(out, "constrained") <- FALSE
+    attr(out, "dimension") <- 2
   }else{
     if(elevation){
       del <- delXY_cpp(tpoints)
@@ -304,12 +307,14 @@ delaunay <- function(
         "volume"      = del[["volume"]],
         "area"        = sum(areas)
       )
+      attr(out, "dimension") <- 2.5
     }else{
       if(quick3d){
         out <- del3D_cpp(tpoints)  
       }else{
         out <- del3D_cpp_hullinfo(tpoints)
       }
+      attr(out, "dimension") <- 3
     }
   }
   class(out) <- "delaunay"
@@ -317,7 +322,43 @@ delaunay <- function(
   out
 }
 
-
+#' @exportS3Method print delaunay
+print.delaunay <- function(x, ...){
+  d <- attr(x, "dimension")
+  if(d == 2){
+    if(attr(x, "constrained")){
+      msg <- sprintf(
+        "Constrained 2D Delaunay triangulation with %d triangles.\n",
+        nrow(x[["faces"]])
+      )
+    }else{
+      msg <- sprintf(
+        "Non-constrained 2D Delaunay triangulation with %d triangles.\n",
+        nrow(x[["faces"]])
+      )
+    }
+    cat(msg)
+  }else if(d == 2.5){
+    msg <- sprintf(
+      "2.5D Delaunay triangulation with %d triangles.\n",
+      ncol(x[["mesh"]][["it"]])
+    )
+    cat(msg)
+  }else{
+    cells <- x[["cells"]]
+    if(is.list(cells)){
+      ncells <- length(cells)
+    }else{
+      ncells <- nrow(cells)
+    }
+    msg <- sprintf(
+      "3D Delaunay triangulation with %d cells.\n",
+      ncells
+    )
+    cat(msg)
+  }
+  invisible(NULL)
+}
 
 #' @title Plot 2D Delaunay triangulation
 #' @description Plot a constrained or unconstrained 2D Delaunay triangulation.
@@ -342,7 +383,7 @@ delaunay <- function(
 #'   border edges nor constraint edges
 #' @param lty_borders,lwd_borders graphical parameters for the border edges
 #' @param lty_constraints,lwd_constraints in the case of a constrained Delaunay
-#'   triangulation, graphical parameters for the constraintt edges which are
+#'   triangulation, graphical parameters for the constraint edges which are
 #'   not border edges
 #' @param ... arguments passed to \code{\link{plot}} for the vertices, such as
 #'   \code{type="n"} or \code{asp=1}
@@ -654,7 +695,11 @@ plotDelaunay3D <- function(
     }
     triangles <- combn(4L, 3L)
     for(i in 1L:ntetrahedra){
-      cellIds <- cells[[i]][["cell"]]
+      if(is.list(cells)){
+        cellIds <- cells[[i]][["cell"]]
+      }else{
+        cellIds <- cells[i, ]
+      }
       simplex <- vertices[cellIds, ]
       for(j in 1L:4L){
         triangles3d(simplex[triangles[, j], ], color = colors[i], alpha = alpha)

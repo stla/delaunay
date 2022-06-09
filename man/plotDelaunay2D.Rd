@@ -50,7 +50,7 @@ border edges nor constraint edges}
 \item{lty_borders, lwd_borders}{graphical parameters for the border edges}
 
 \item{lty_constraints, lwd_constraints}{in the case of a constrained Delaunay
-triangulation, graphical parameters for the constraintt edges which are
+triangulation, graphical parameters for the constraint edges which are
 not border edges}
 
 \item{...}{arguments passed to \code{\link{plot}} for the vertices, such as
