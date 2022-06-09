@@ -1,16 +1,31 @@
-Package: delaunay
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Package: delaunay
+Title: 2D, 2.5D, and 3D Delaunay Tessellations
 Version: 0.0.9000
-Date: 2022-06-08
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or
-        more full sentences.
+Date: 2022-06-09
+Author: Stéphane Laurent
+Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
+Description: Construction and visualization of 2D Delaunay triangulations,
+    possibly constrained, 2.5D (i.e. elevated) Delaunay triangulations,
+    and 3D Delaunay triangulations.
 License: GPL-3
-SystemRequirements: C++ 14, gmp, mpfr
-Imports: Rcpp (>= 1.0.8), Rvcg, randomcoloR, utils, rgl, gplots, graphics
-Suggests: BH, uniformly
-LinkingTo: Rcpp, RcppCGAL, RcppEigen
+URL: https://github.com/stla/delaunay
+BugReports: https://github.com/stla/delaunay/issues
+Imports: 
+    gplots,
+    graphics,
+    randomcoloR,
+    Rcpp (>= 1.0.8),
+    rgl,
+    Rvcg,
+    utils
+Suggests: 
+    BH,
+    uniformly
+LinkingTo: 
+    Rcpp,
+    RcppCGAL,
+    RcppEigen
 Encoding: UTF-8
 RoxygenNote: 7.2.0
+SystemRequirements: C++ 14, gmp, mpfr
