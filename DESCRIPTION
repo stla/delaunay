@@ -1,8 +1,7 @@
 Type: Package
 Package: delaunay
 Title: 2D, 2.5D, and 3D Delaunay Tessellations
-Version: 0.0.9000
-Date: 2022-06-09
+Version: 1.0.0
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
 Description: Construction and visualization of 2D Delaunay triangulations,
