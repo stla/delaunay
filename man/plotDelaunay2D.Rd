@@ -53,8 +53,8 @@ border edges nor constraint edges}
 triangulation, graphical parameters for the constraint edges which are
 not border edges}
 
-\item{...}{arguments passed to \code{\link[base]{points}} for the vertices, 
-such as \code{type="n"} or \code{asp=1}}
+\item{...}{arguments passed to \code{\link[graphics]{points}} for the 
+vertices, such as \code{type="n"} or \code{asp=1}}
 }
 \value{
 No value, just renders a 2D plot.

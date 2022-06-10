@@ -1,12 +1,12 @@
 Type: Package
 Package: delaunay
-Title: 2D, 2.5D, and 3D Delaunay Tessellations
+Title: 2d, 2.5d, and 3d Delaunay Tessellations
 Version: 1.0.0
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
-Description: Construction and visualization of 2D Delaunay triangulations,
-    possibly constrained, 2.5D (i.e. elevated) Delaunay triangulations,
-    and 3D Delaunay triangulations.
+Description: Construction and visualization of 2d Delaunay triangulations,
+    possibly constrained, 2.5d (i.e. elevated) Delaunay triangulations,
+    and 3d Delaunay triangulations.
 License: GPL-3
 URL: https://github.com/stla/delaunay
 BugReports: https://github.com/stla/delaunay/issues

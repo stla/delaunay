@@ -387,8 +387,8 @@ print.delaunay <- function(x, ...){
 #' @param lty_constraints,lwd_constraints in the case of a constrained Delaunay
 #'   triangulation, graphical parameters for the constraint edges which are
 #'   not border edges
-#' @param ... arguments passed to \code{\link[base]{points}} for the vertices, 
-#'   such as \code{type="n"} or \code{asp=1}
+#' @param ... arguments passed to \code{\link[graphics]{points}} for the 
+#'   vertices, such as \code{type="n"} or \code{asp=1}
 #'
 #' @return No value, just renders a 2D plot.
 #'
@@ -396,7 +396,7 @@ print.delaunay <- function(x, ...){
 #'
 #' @export
 #' @importFrom randomcoloR randomColor distinctColorPalette
-#' @importFrom graphics plot polygon par segments
+#' @importFrom graphics plot polygon par segments points
 #' @importFrom gplots col2hex
 #'
 #' @examples library(delaunay)
