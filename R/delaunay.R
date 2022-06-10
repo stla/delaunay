@@ -387,8 +387,8 @@ print.delaunay <- function(x, ...){
 #' @param lty_constraints,lwd_constraints in the case of a constrained Delaunay
 #'   triangulation, graphical parameters for the constraint edges which are
 #'   not border edges
-#' @param ... arguments passed to \code{\link{plot}} for the vertices, such as
-#'   \code{type="n"} or \code{asp=1}
+#' @param ... arguments passed to \code{\link[base]{points}} for the vertices, 
+#'   such as \code{type="n"} or \code{asp=1}
 #'
 #' @return No value, just renders a 2D plot.
 #'
@@ -473,7 +473,9 @@ plotDelaunay2D <- function(
       call. = TRUE
     )
   }
-  plot(vertices, ...)
+  pars <- list(...)
+  pars[["type"]] <- NULL
+  do.call(function(...) plot(vertices, type = "n", ...), pars)
   if(!isFalsy(fillcolor)){
     fillcolor <- tryCatch({
       col2hex(fillcolor)
@@ -544,6 +546,9 @@ plotDelaunay2D <- function(
       )
     }
   }
+  pars <- list(...)
+  pars[["axes"]] <- NULL
+  do.call(function(...) points(vertices, ...), pars)
   invisible(NULL)
 }
 
