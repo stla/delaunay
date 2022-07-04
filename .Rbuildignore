@@ -6,3 +6,4 @@
 ^inst/essais$
 ^inst/images$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
