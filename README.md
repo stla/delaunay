@@ -5,6 +5,10 @@
 [![R-CMD-check-valgrind](https://github.com/stla/delaunay/actions/workflows/R-CMD-check-valgrind.yaml/badge.svg)](https://github.com/stla/delaunay/actions/workflows/R-CMD-check-valgrind.yaml)
 <!-- badges: end -->
 
+The CRAN version of this package is available for Windows only. Unix users can
+install the Github version.
+
+
 ## Elevated Delaunay triangulation
 
 *Bivariate Gaussian density:*
