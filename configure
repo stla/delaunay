@@ -1,5 +1,7 @@
 #!/bin/sh
 
+## Kindly supplied by Dirk Eddelbuettel
+
 ## check for pkg-config
 pkg-config --version >/dev/null 2>&1
 if [ $? -ne 0 ]; then
