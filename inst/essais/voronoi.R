@@ -21,11 +21,11 @@ d <- delaunay(points, constraints = edges)
 
 
 #####
-points <- uniformly::runif_in_annulus(100, c(0, 0), 2, 1)
+points <- uniformly::runif_in_annulus(40, c(0, 0), 2, 1)
 
 nsides <- 6L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
-opoints <- 2*cbind(cos(angles), sin(angles))
+opoints <- 3*cbind(cos(angles), sin(angles))
 ipoints <- cbind(cos(angles), sin(angles))
 points <- rbind(opoints, ipoints, points)
 # constraint edges
@@ -50,7 +50,7 @@ voronoiEdgeFromDelaunayEdge <- function(edgeIndex) {
   face2 <- faces[2L]
   c1 <- Circumcenters[face1, ]
   if(is.na(face2)){
-    return(NULL)
+    return(cbind(c1, NA))
   }
   c2 <- Circumcenters[face2, ]
   if(isTRUE(all.equal(c1, c2))){
@@ -73,8 +73,14 @@ voronoiCell <- function(facetsQuotienter, edgeTransformer){
     voronoiEdges <- Filter(Negate(is.null), lapply(delaunayEdges, function(dedge){
       voronoiEdgeFromDelaunayEdge(dedge)
     }))
+    nedges <- length(voronoiEdges)
+    bounded <- nedges > 0L
+    while(nedges > 0L){
+      bounded <- bounded && !anyNA(edges[[nedges]])
+      nedges <- nedges - 1L
+    }
     cell <- edgeTransformer(voronoiEdges)
-    attr(cell, "bounded") <- TRUE
+    attr(cell, "bounded") <- bounded
     cell
   }
 }
@@ -94,15 +100,19 @@ voronoi0 <- function(cellGetter, tessellation) {
 v <- voronoi0(voronoiCell(identity, identity), NULL)
 
 plot(Vertices, type = "n")
+plotDelaunay2D(d, asp = 1)
 for(i in seq_along(v)) {
   vi <- v[[i]]
   site <- vi$site
   points(rbind(site), pch = 19)
   cell <- vi$cell
+  if(anyNA(cell)) {
+    next
+  }
   for(j in seq_along(cell)) {
     edge <- cell[[j]]
     A <- edge[, 1L]
     B <- edge[, 2L]
-    segments(A[1L], A[2L], B[1L], B[2L], col = "black")
+    segments(A[1L], A[2L], B[1L], B[2L], col = "black", lwd=6)
   }
 }
