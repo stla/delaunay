@@ -4,15 +4,26 @@ library(cgalMeshes)
 nsides <- 6L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
 outer_points <- cbind(cos(angles), sin(angles))
-inner_points <- outer_points / 2
-middle_points <- outer_points / 1.5
+inner_points <- outer_points / 4
+
+nsides <- 12L
+angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
+middle_points <- cbind(cos(angles), sin(angles)) / 2
 points <- rbind(outer_points, inner_points, middle_points)
+
+angles <- angles + pi/24
+middle_points <- cbind(cos(angles), sin(angles)) / 3
+points <- rbind(points, middle_points)
+middle_points <- cbind(cos(angles), sin(angles)) / 1.5
+points <- rbind(points, middle_points)
+
+
 # constraint edges
-indices <- 1L:nsides
+indices <- 1L:6L
 edges <- cbind(
   indices, c(indices[-1L], indices[1L])
 )
-edges <- rbind(edges, edges + nsides)
+edges <- rbind(edges, edges + 6L)
 # constrained Delaunay triangulation
 d <- delaunay(points, constraints = edges)
 
@@ -21,22 +32,6 @@ d <- delaunay(points, constraints = edges)
 
 
 #####
-points <- uniformly::runif_in_annulus(40, c(0, 0), 2, 1)
-
-nsides <- 6L
-angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
-opoints <- 2.5*cbind(cos(angles), sin(angles))
-ipoints <- cbind(cos(angles), sin(angles))
-points <- rbind(opoints, ipoints, points)
-# constraint edges
-indices <- 1L:nsides
-edges <- cbind(
-  indices, c(indices[-1L], indices[1L])
-)
-constraints <- rbind(edges, edges + nsides)
-
-
-d <- delaunay(points, constraints = constraints)
 vertices <- cbind(points, 0)
 mesh <- cgalMesh$new(vertices = vertices, faces = d[["faces"]])
 Edges <- mesh$getEdges()
@@ -99,20 +94,30 @@ voronoi0 <- function(cellGetter, tessellation) {
 
 v <- voronoi0(voronoiCell(identity, identity), NULL)
 
-plot(Vertices, type = "n")
-plotDelaunay2D(d, asp = 1)
+
+library(randomcoloR)
+plot(Vertices*1.5, type = "n", asp = 1)
+#plotDelaunay2D(d, asp = 1)
 for(i in seq_along(v)) {
   vi <- v[[i]]
   site <- vi$site
-  points(rbind(site), pch = 19)
   cell <- vi$cell
-  if(anyNA(cell)) {
+  vertices <- unique(t(do.call(cbind, cell)))
+  if(anyNA(vertices)) {
     next
   }
-  for(j in seq_along(cell)) {
-    edge <- cell[[j]]
-    A <- edge[, 1L]
-    B <- edge[, 2L]
-    segments(A[1L], A[2L], B[1L], B[2L], col = "black", lwd=6)
-  }
+  vectors <- sweep(vertices, 2L, colMeans(vertices), check.margin = FALSE)
+  vector1 <- vectors[1L, ]
+  a <- atan2(vector1[2L], vector1[1L])
+  vectors <- vectors[-1L, ]
+  angles <- c(0, apply(vectors, 1L, function(v) atan2(v[2L], v[1L]) - a))
+  vertices <- vertices[order(angles %% (2*pi)), ]
+  polygon(vertices, col = randomColor(hue="random", luminosity = "dark"))
+  points(rbind(site), pch = 19)
+  # for(j in seq_along(cell)) {
+  #   edge <- cell[[j]]
+  #   A <- edge[, 1L]
+  #   B <- edge[, 2L]
+  #   segments(A[1L], A[2L], B[1L], B[2L], col = "black", lwd=6)
+  # }
 }
