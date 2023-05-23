@@ -1,17 +1,17 @@
 library(delaunay)
 library(cgalMeshes)
 
-nsides <- 6L
+nsides <- 12L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
 outer_points <- cbind(cos(angles), sin(angles))
 inner_points <- outer_points / 4
 
-nsides <- 12L
+nsides <- 36L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
 middle_points <- cbind(cos(angles), sin(angles)) / 2
 points <- rbind(outer_points, inner_points, middle_points)
 
-angles <- angles + pi/24
+angles <- angles + pi/36
 middle_points <- cbind(cos(angles), sin(angles)) / 3
 points <- rbind(points, middle_points)
 middle_points <- cbind(cos(angles), sin(angles)) / 1.5
@@ -19,17 +19,18 @@ points <- rbind(points, middle_points)
 
 
 # constraint edges
-indices <- 1L:6L
+indices <- 1L:12L
 edges <- cbind(
   indices, c(indices[-1L], indices[1L])
 )
-edges <- rbind(edges, edges + 6L)
+edges <- rbind(edges, edges + 12L)
 # constrained Delaunay triangulation
 d <- delaunay(points, constraints = edges)
 
 #####
 
-
+# polygon(outer_points, lwd = 6, border = "black")
+# polygon(inner_points, lwd = 6, border = "black")
 
 #####
 vertices <- cbind(points, 0)
@@ -46,6 +47,12 @@ voronoiEdgeFromDelaunayEdge <- function(edgeIndex) {
   c1 <- Circumcenters[face1, ]
   if(is.na(face2)){
     return(cbind(c1, NA))
+    # if(Edges[edgeIndex, "length"] < 0.5) {
+    #   return(cbind(c1, c(0,0))) # NA  
+    # } else {
+    #   M <- (Vertices[Edges[edgeIndex, "i1"], ] + Vertices[Edges[edgeIndex, "i2"], ])/2
+    #   return(cbind(c1, 2*M))
+    # }
   }
   c2 <- Circumcenters[face2, ]
   if(isTRUE(all.equal(c1, c2))){
@@ -97,7 +104,7 @@ v <- voronoi0(voronoiCell(identity, identity), NULL)
 
 library(randomcoloR)
 opar <- par(mar = c(0,0,0,0))
-plot(Vertices*1.5, type = "n", asp = 1, axes=FALSE, xlab=NA, ylab=NA)
+plot(Vertices*1, type = "n", asp = 1, axes=FALSE, xlab=NA, ylab=NA)
 #plotDelaunay2D(d, asp = 1)
 for(i in seq_along(v)) {
   vi <- v[[i]]
