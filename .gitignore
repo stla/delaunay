@@ -48,6 +48,7 @@ src-x64/
 # other
 inst/trash/
 .Rprofile
+src/Makevars
 
 # Eclipse
 .settings/

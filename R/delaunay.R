@@ -245,31 +245,28 @@ delaunay <- function(
     cstr_col1 <- constraints[, 1L]
     cstr_col2 <- constraints[, 2L]
     constraints <- cbind(pmin(cstr_col1, cstr_col2), pmax(cstr_col1, cstr_col2))
-    if(anyDuplicated(constraints)){
+    if(anyDuplicated(constraints)) {
       stop("There are some duplicated constraints.", call. = TRUE)
     }
-    if(any(cstr_col1 == cstr_col2)){
+    if(any(cstr_col1 == cstr_col2)) {
       stop("There are some invalid constraints.", call. = TRUE)
     }
-    triangles <- del2DC_cpp(tpoints, t(constraints))
+    result <- del2DC_cpp(tpoints, t(constraints))
+    triangles <- result[["faces"]]
     # edges <- apply(triangles, 1L, function(x){
     #   rbind(c(x[1L], x[2L]), c(x[1L], x[3L]), c(x[2L], x[3L]))
     # }, simplify = FALSE)
     # edges <- do.call(rbind, edges)
     # edges <- edges[!duplicated(edges), ]
-    rglfake <- list(vb = rbind(tpoints, 1), it = triangles)
-    class(rglfake) <- "mesh3d"
     out <- list(
       "faces"       = t(triangles),
-      "edges"       = `colnames<-`(as.matrix(
-        vcgGetEdge(rglfake))[, c(1L, 2L, 4L)], c("v1", "v2", "border")
-      ),
       "constraints" = constraints,
-      "area"        = delaunayArea(points, t(triangles))
+      "area"        = delaunayArea(points, t(triangles)),
+      "mesh"        = result[["mesh"]]
     )
     attr(out, "constrained") <- TRUE
     attr(out, "dimension") <- 2
-  }else if(dimension == 2L && is.null(constraints)){
+  }else if(dimension == 2L && is.null(constraints)) {
     out <- del2D_cpp(tpoints)
     triangles <- out[["faces"]]
     out[["faces"]] <- t(triangles)
