@@ -47,7 +47,7 @@ void mark_domains(CDT& cdt) {
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix del2DC_cpp(Rcpp::NumericMatrix pts,
+Rcpp::List del2DC_cpp(Rcpp::NumericMatrix pts,
                                Rcpp::IntegerMatrix edges) {
   const int npoints = pts.ncol();
   std::vector<std::pair<CDT::Point, int>> points(npoints);
@@ -69,22 +69,36 @@ Rcpp::IntegerMatrix del2DC_cpp(Rcpp::NumericMatrix pts,
   Rcpp::IntegerMatrix faces(3, nfaces);
   mark_domains(cdt);
   size_t nfaces_out;
+  Mesh mesh;
   {
     size_t i = 0;
     for(CDT::Face_handle f : cdt.finite_face_handles()){
       if(f->info().in_domain()){
+        const Point2 p0 = f->vertex(0)->point();
+        const Point2 p1 = f->vertex(1)->point();
+        const Point2 p2 = f->vertex(2)->point();
+        const vertex_descriptor v0 = mesh.add_vertex(p0);
+        const vertex_descriptor v1 = mesh.add_vertex(p1);
+        const vertex_descriptor v2 = mesh.add_vertex(p2);
+        const face_descriptor fd = mesh.add_face(v0, v1, v2);
+        if(fd == Mesh::null_face()) {
+          Rcpp::stop("The face could not be added.");
+        }
         const int id0 = f->vertex(0)->info();
         const int id1 = f->vertex(1)->info();
         const int id2 = f->vertex(2)->info();
-        // std::array<unsigned, 3> ids = {id0, id1, id2};
-        // std::sort(ids.begin(), ids.end());
-        faces(Rcpp::_, i) = Rcpp::IntegerVector::create(id0, id1, id2);
-        // faces(i, 1) = ids[1];
-        // faces(i, 2) = ids[2];
-        ++i;
+        faces(Rcpp::_, i++) = Rcpp::IntegerVector::create(id0, id1, id2);
       }
     }
     nfaces_out = i;
   }
-  return faces(Rcpp::_, Rcpp::Range(0, nfaces_out-1));
+  //
+  return Rcpp::List::create(
+    Rcpp::Named("faces") = faces(Rcpp::_, Rcpp::Range(0, nfaces_out-1)), 
+    Rcpp::Named("mesh") = Rcpp::List::create(
+      Rcpp::Named("vertices") = getVertices(mesh),
+      Rcpp::Named("edges") = getEdges(mesh),
+      Rcpp::Named("faces") = getFacesInfo(mesh) 
+    )
+  );
 }

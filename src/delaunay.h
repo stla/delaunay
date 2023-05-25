@@ -20,6 +20,10 @@
 
 #include <RcppEigen.h>
 
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Kernel/global_functions.h>
+
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 
 struct FaceInfo2 {
@@ -50,3 +54,15 @@ typedef CGAL::Triangulation_data_structure_3<Vb3> Tds3;
 typedef CGAL::Delaunay_triangulation_3<K, Tds3> DT3D;
 typedef K::Tetrahedron_3 Tetrahedron3;
 typedef Rcpp::NumericVector Dvector;
+
+typedef CGAL::Surface_mesh<Point2> Mesh;
+typedef Mesh::Vertex_index         vertex_descriptor;
+typedef Mesh::Face_index           face_descriptor;
+typedef Mesh::Halfedge_index       halfedge_descriptor;
+typedef Mesh::Edge_index           edge_descriptor;
+namespace PMP = CGAL::Polygon_mesh_processing;
+
+
+Rcpp::DataFrame getEdges(Mesh&);
+Rcpp::NumericMatrix getFacesInfo(Mesh&);
+Rcpp::NumericMatrix getVertices(Mesh&);

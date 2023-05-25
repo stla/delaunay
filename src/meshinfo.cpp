@@ -2,19 +2,10 @@
 #include "delaunay.h"
 #endif
 
-#include <CGAL/Surface_mesh.h>
-#include <CGAL/Polygon_mesh_processing/measure.h>
-#include <CGAL/Kernel/global_functions.h>
-namespace PMP = CGAL::Polygon_mesh_processing;
-typedef CGAL::Surface_mesh<Point2> Mesh;
-typedef Mesh::Vertex_index         vertex_descriptor;
-typedef Mesh::Face_index           face_descriptor;
-typedef Mesh::Halfedge_index       halfedge_descriptor;
-typedef Mesh::Edge_index           edge_descriptor;
 
 // -------------------------------------------------------------------------- //
 // -------------------------------------------------------------------------- //
-Rcpp::DataFrame getEdges(Mesh mesh) {
+Rcpp::DataFrame getEdges(Mesh& mesh) {
   const size_t nedges = mesh.number_of_edges();
   Rcpp::IntegerVector I1(nedges);
   Rcpp::IntegerVector I2(nedges);
@@ -56,7 +47,7 @@ Rcpp::DataFrame getEdges(Mesh mesh) {
 
 // -------------------------------------------------------------------------- //
 // -------------------------------------------------------------------------- //
-Rcpp::NumericMatrix getFacesInfo(Mesh mesh) {
+Rcpp::NumericMatrix getFacesInfo(Mesh& mesh) {
   Rcpp::CharacterVector rownames = {"ccx", "ccy", "area"};
   Rcpp::NumericMatrix FacesInfo(3, mesh.number_of_faces());
   int i = 0;
@@ -76,4 +67,23 @@ Rcpp::NumericMatrix getFacesInfo(Mesh mesh) {
   }
   Rcpp::rownames(FacesInfo) = rownames;
   return Rcpp::transpose(FacesInfo);
+}
+
+
+// -------------------------------------------------------------------------- //
+// -------------------------------------------------------------------------- //
+Rcpp::NumericMatrix getVertices(Mesh& mesh) {
+  const size_t nvertices = mesh.number_of_vertices();
+  Rcpp::NumericMatrix Vertices(2, nvertices);
+  {
+    size_t i = 0;
+    for(vertex_descriptor vd : mesh.vertices()) {
+      Rcpp::NumericVector col_i(2);
+      const Point2 vertex = mesh.point(vd);
+      col_i(0) = vertex.x();
+      col_i(1) = vertex.y();
+      Vertices(Rcpp::_, i++) = col_i;
+    }
+  }
+  return Rcpp::transpose(Vertices);
 }

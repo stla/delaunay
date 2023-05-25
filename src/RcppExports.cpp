@@ -23,7 +23,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // del2DC_cpp
-Rcpp::IntegerMatrix del2DC_cpp(Rcpp::NumericMatrix pts, Rcpp::IntegerMatrix edges);
+Rcpp::List del2DC_cpp(Rcpp::NumericMatrix pts, Rcpp::IntegerMatrix edges);
 RcppExport SEXP _delaunay_del2DC_cpp(SEXP ptsSEXP, SEXP edgesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
