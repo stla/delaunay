@@ -4,6 +4,7 @@
 
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Kernel/global_functions.h>
 namespace PMP = CGAL::Polygon_mesh_processing;
 typedef CGAL::Surface_mesh<Point2> Mesh;
 typedef Mesh::Vertex_index         vertex_descriptor;
@@ -53,3 +54,26 @@ Rcpp::DataFrame getEdges(Mesh mesh) {
   return Edges;
 }
 
+// -------------------------------------------------------------------------- //
+// -------------------------------------------------------------------------- //
+Rcpp::NumericMatrix getFacesInfo(Mesh mesh) {
+  Rcpp::CharacterVector rownames = {"ccx", "ccy", "area"};
+  Rcpp::NumericMatrix FacesInfo(3, mesh.number_of_faces());
+  int i = 0;
+  for(face_descriptor fd : mesh.faces()) {
+    auto vs = vertices_around_face(mesh.halfedge(fd), mesh).begin();
+    Point2 p1 = mesh.point(*(vs++));
+    Point2 p2 = mesh.point(*(vs++));
+    Point2 p3 = mesh.point(*vs);
+    Point2 circumcenter = CGAL::circumcenter(p1, p2, p3);
+    double area         = CGAL::area(p1, p2, p3);
+    Rcpp::NumericVector col_i = {
+      circumcenter.x(),
+      circumcenter.y(),
+      area
+    };
+    FacesInfo(Rcpp::_, i++) = col_i;
+  }
+  Rcpp::rownames(FacesInfo) = rownames;
+  return Rcpp::transpose(FacesInfo);
+}
