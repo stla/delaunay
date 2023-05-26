@@ -7,7 +7,7 @@ voronoiEdgeFromDelaunayEdge <- function(edgeIndex, Edges, Circumcenters) {
     return(cbind(c1, NA_real_))
   }
   c2 <- Circumcenters[face2, ]
-  if(isTRUE(all.equal(c1, c2))){
+  if(isTRUE(all.equal(c1, c2))) {
     return(NULL)
   }
   cbind(c1, c2)
@@ -19,22 +19,22 @@ vertexNeighborEdges <- function(vertexId, Edges) {
   which((i1 == vertexId) | (i2 == vertexId))
 }
 
-VoronoiCell <- function(mesh, facetsQuotienter, edgeTransformer){
+VoronoiCell <- function(mesh, facetsQuotienter, edgeTransformer) {
   Edges <- mesh[["edges"]]
   Faces <- mesh[["faces"]]
   Circumcenters <- Faces[, c("ccx", "ccy")]
-  function(vertexId){
+  function(vertexId) {
     delaunayEdges <- facetsQuotienter(
       unname(vertexNeighborEdges(vertexId, Edges))
     )
     voronoiEdges <- Filter(
-      Negate(is.null), lapply(delaunayEdges, function(dedge){
+      Negate(is.null), lapply(delaunayEdges, function(dedge) {
         voronoiEdgeFromDelaunayEdge(dedge, Edges, Circumcenters)
       })
     )
     nedges <- length(voronoiEdges)
     bounded <- nedges > 0L
-    while(nedges > 0L){
+    while(nedges > 0L) {
       bounded <- bounded && !anyNA(voronoiEdges[[nedges]])
       nedges <- nedges - 1L
     }
@@ -123,14 +123,14 @@ Voronoi0 <- function(cellGetter, mesh) {
 #' points(points, pch = 19)
 #' par(opar)
 Voronoi <- function(triangulation) {
-  if(!inherits(triangulation, "delaunay")){
+  if(!inherits(triangulation, "delaunay")) {
     stop(
       "The argument `triangulation` must be an output of the `delaunay` function.",
       call. = TRUE
     )
   }
   dimension <- attr(triangulation, "dimension")
-  if(dimension != 2){
+  if(dimension != 2) {
     stop(
       sprintf("Invalid dimension (%s instead of 2).", dimension),
       call. = TRUE
@@ -206,14 +206,6 @@ plotVoronoi <- function(
     tessellation, colors = "random", hue = "random", luminosity = "light", 
     alpha = 1, ...
 ){
-  # cells <- Filter(isBoundedCell, v)
-  # ncells <- length(cells)
-  # if(ncells == 0L){
-  #   stop(
-  #     "This Vorono\u00ef tessellation has no bounded cells.",
-  #     call. = TRUE
-  #   )
-  # }
   ncells <- length(tessellation)
   if(identical(colors, "random")) {
     colors <- scales::alpha(
@@ -234,7 +226,7 @@ plotVoronoi <- function(
     }
     colors <- scales::alpha(colors, alpha)
   }
-  for(i in 1L:ncells){
+  for(i in 1L:ncells) {
     cell <- tessellation[[i]][["cell"]]
     vertices <- unique(t(do.call(cbind, cell)))
     if(anyNA(vertices)) {
