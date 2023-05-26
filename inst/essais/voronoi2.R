@@ -1,23 +1,20 @@
 library(delaunay)
 library(cgalMeshes)
 
+# make the vertices
 nsides <- 6L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
 outer_points <- cbind(cos(angles), sin(angles))
 inner_points <- outer_points / 4
-
 nsides <- 12L
 angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
 middle_points <- cbind(cos(angles), sin(angles)) / 2
 points <- rbind(outer_points, inner_points, middle_points)
-
 angles <- angles + pi/24
 middle_points <- cbind(cos(angles), sin(angles)) / 3
 points <- rbind(points, middle_points)
 middle_points <- cbind(cos(angles), sin(angles)) / 1.5
 points <- rbind(points, middle_points)
-
-
 # constraint edges
 indices <- 1L:6L
 edges <- cbind(
@@ -25,7 +22,7 @@ edges <- cbind(
 )
 edges <- rbind(edges, edges + 6L)
 # constrained Delaunay triangulation
-d <- delaunay(points, constraints = edges)
+del <- delaunay(points, constraints = edges)
 
 #####
 
