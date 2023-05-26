@@ -1,3 +1,8 @@
+# delaunay 2.0.0 (2023-05-26)
+
+Voronoï tessellation.
+
+
 # delaunay 1.1.1 (2022-10-19)
 
 Enabled C++ 17.

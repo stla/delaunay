@@ -1,8 +1,8 @@
 ## Testing environments
 
-* local R-4.2.1 on Windows 10
+* local R-4.3.0 on Linux Mint
 * win-builder devel
-* R-4.2.1 on Ubuntu 20 with and without Valgrind (via Github action)
+* Ubuntu with and without Valgrind (via Github action)
 
 
 ## R CMD check results

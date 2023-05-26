@@ -6,7 +6,7 @@ Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
 Description: Construction and visualization of 2d Delaunay triangulations,
     possibly constrained, 2.5d (i.e. elevated) Delaunay triangulations,
-    and 3d Delaunay triangulations.
+    3d Delaunay triangulations, and 2D Voronoï tessellations.
 License: GPL-3
 URL: https://github.com/stla/delaunay
 BugReports: https://github.com/stla/delaunay/issues
