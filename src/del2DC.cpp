@@ -54,7 +54,7 @@ Rcpp::List del2DC_cpp(Rcpp::NumericMatrix pts,
   Mesh mesh;
   for(int i = 0; i < npoints; ++i) {
     const Rcpp::NumericVector pt_i = pts(Rcpp::_, i);
-    points[i] = std::make_pair(CDT::Point(pt_i(0), pt_i(1)), i + 1);
+    points[i] = std::make_pair(CDT::Point(pt_i(0), pt_i(1)), i);
     mesh.add_vertex(Point2(pt_i(0), pt_i(1)));
   }
   CDT cdt;
@@ -75,26 +75,16 @@ Rcpp::List del2DC_cpp(Rcpp::NumericMatrix pts,
     size_t i = 0;
     for(CDT::Face_handle f : cdt.finite_face_handles()){
       if(f->info().in_domain()){
-        // const Point2 p0 = f->vertex(0)->point();
-        // const Point2 p1 = f->vertex(1)->point();
-        // const Point2 p2 = f->vertex(2)->point();
-        // const vertex_descriptor v0 = mesh.add_vertex(p0);
-        // const vertex_descriptor v1 = mesh.add_vertex(p1);
-        // const vertex_descriptor v2 = mesh.add_vertex(p2);
-        // const face_descriptor fd = mesh.add_face(v0, v1, v2);
-        // if(fd == Mesh::null_face()) {
-        //   Rcpp::stop("The face could not be added.");
-        // }
         const int id0 = f->vertex(0)->info();
         const int id1 = f->vertex(1)->info();
         const int id2 = f->vertex(2)->info();
-        faces(Rcpp::_, i++) = Rcpp::IntegerVector::create(id0, id1, id2);
+        faces(Rcpp::_, i++) = Rcpp::IntegerVector::create(id0+1, id1+1, id2+1);
         const face_descriptor fd = mesh.add_face(
-          vertex_descriptor(id0-1), 
-          vertex_descriptor(id1-1), 
-          vertex_descriptor(id2-1)
+          vertex_descriptor(id0), 
+          vertex_descriptor(id1), 
+          vertex_descriptor(id2)
         );
-        if(fd == Mesh::null_face()) {
+        if(fd == Mesh::null_face()) { // that should not happen
           Rcpp::stop("The face could not be added.");
         }
       }
@@ -104,10 +94,10 @@ Rcpp::List del2DC_cpp(Rcpp::NumericMatrix pts,
   //
   return Rcpp::List::create(
     Rcpp::Named("faces") = faces(Rcpp::_, Rcpp::Range(0, nfaces_out-1)), 
-    Rcpp::Named("mesh") = Rcpp::List::create(
+    Rcpp::Named("mesh")  = Rcpp::List::create(
       Rcpp::Named("vertices") = getVertices(mesh),
-      Rcpp::Named("edges") = getEdges(mesh),
-      Rcpp::Named("faces") = getFacesInfo(mesh) 
+      Rcpp::Named("edges")    = getEdges(mesh),
+      Rcpp::Named("faces")    = getFacesInfo(mesh) 
     )
   );
 }

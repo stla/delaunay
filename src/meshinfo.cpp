@@ -16,11 +16,11 @@ Rcpp::DataFrame getEdges(Mesh& mesh) {
   {
     size_t i = 0;
     for(edge_descriptor ed : mesh.edges()) {
-      vertex_descriptor s = source(ed, mesh);
-      vertex_descriptor t = target(ed, mesh);
+      const vertex_descriptor s = source(ed, mesh);
+      const vertex_descriptor t = target(ed, mesh);
       I1(i) = (int)s + 1;
       I2(i) = (int)t + 1;
-      halfedge_descriptor h0 = mesh.halfedge(ed, 0);
+      const halfedge_descriptor h0 = mesh.halfedge(ed, 0);
       Length(i) = PMP::edge_length(h0, mesh);
       const bool isBorder = mesh.is_border(ed);
       Border(i) = isBorder;
@@ -28,7 +28,7 @@ Rcpp::DataFrame getEdges(Mesh& mesh) {
       if(isBorder) {
         F2(i) = Rcpp::IntegerVector::get_na();
       } else {
-        halfedge_descriptor h1 = mesh.halfedge(ed, 1);
+        const halfedge_descriptor h1 = mesh.halfedge(ed, 1);
         F2(i) = int(mesh.face(h1)) + 1;
       }
       i++;
@@ -48,16 +48,16 @@ Rcpp::DataFrame getEdges(Mesh& mesh) {
 // -------------------------------------------------------------------------- //
 // -------------------------------------------------------------------------- //
 Rcpp::NumericMatrix getFacesInfo(Mesh& mesh) {
-  Rcpp::CharacterVector rownames = {"ccx", "ccy", "area"};
+  const Rcpp::CharacterVector rownames = {"ccx", "ccy", "area"};
   Rcpp::NumericMatrix FacesInfo(3, mesh.number_of_faces());
   int i = 0;
   for(face_descriptor fd : mesh.faces()) {
     auto vs = vertices_around_face(mesh.halfedge(fd), mesh).begin();
-    Point2 p1 = mesh.point(*(vs++));
-    Point2 p2 = mesh.point(*(vs++));
-    Point2 p3 = mesh.point(*vs);
-    Point2 circumcenter = CGAL::circumcenter(p1, p2, p3);
-    double area         = CGAL::area(p1, p2, p3);
+    const Point2 p1 = mesh.point(*(vs++));
+    const Point2 p2 = mesh.point(*(vs++));
+    const Point2 p3 = mesh.point(*vs);
+    const Point2 circumcenter = CGAL::circumcenter(p1, p2, p3);
+    const double area         = CGAL::area(p1, p2, p3);
     Rcpp::NumericVector col_i = {
       circumcenter.x(),
       circumcenter.y(),

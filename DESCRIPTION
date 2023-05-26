@@ -1,7 +1,7 @@
 Type: Package
 Package: delaunay
 Title: 2d, 2.5d, and 3d Delaunay Tessellations
-Version: 1.1.1
+Version: 1.1.1.9000
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
 Description: Construction and visualization of 2d Delaunay triangulations,
@@ -26,5 +26,5 @@ LinkingTo:
     RcppEigen,
     BH
 Encoding: UTF-8
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 SystemRequirements: C++ 17, gmp, mpfr

@@ -32,12 +32,11 @@ d <- delaunay(points, constraints = edges)
 # polygon(inner_points, lwd = 6, border = "black")
 
 #####
-vertices <- cbind(points, 0)
-mesh <- cgalMesh$new(vertices = vertices, faces = d[["faces"]])
-Edges <- mesh$getEdges()
-Faces <- mesh$getFacesInfo()
+mesh <- d[["mesh"]]
+Edges <- mesh[["edges"]]
+Faces <- mesh[["faces"]]
 Circumcenters <- Faces[, c("ccx", "ccy")]
-Vertices <- points
+Vertices <- mesh[["vertices"]]
 
 voronoiEdgeFromDelaunayEdge <- function(edgeIndex) {
   faces <- unlist(Edges[edgeIndex, c("f1", "f2")])
