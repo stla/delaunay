@@ -526,9 +526,9 @@ plotDelaunay2D <- function(
     }
   }
   constraintEdges <- triangulation[["constraints"]]
-  allEdges <- triangulation[["edges"]]
-  borderEdges <- allEdges[allEdges[, "border"] == 1L, c(1L, 2L)]
-  allEdges <- allEdges[, c(1L, 2L)]
+  allEdges <- triangulation[["mesh"]][["edges"]]
+  borderEdges <- as.matrix(allEdges[allEdges[, "border"], c("i1", "i2")])
+  allEdges <- as.matrix(allEdges[, c("i1", "i2")])
   specialEdges <- unionEdges(borderEdges, constraintEdges)
   constraintEdges <- subtractEdges(specialEdges, borderEdges)
   otherEdges <- subtractEdges(allEdges, specialEdges)
