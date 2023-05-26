@@ -31,26 +31,15 @@ d <- delaunay(points, constraints = edges)
 # polygon(outer_points, lwd = 6, border = "black")
 # polygon(inner_points, lwd = 6, border = "black")
 
-#####
-mesh <- d[["mesh"]]
-Edges <- mesh[["edges"]]
-Faces <- mesh[["faces"]]
-Circumcenters <- Faces[, c("ccx", "ccy")]
-Vertices <- mesh[["vertices"]]
+############################################################################
 
-voronoiEdgeFromDelaunayEdge <- function(edgeIndex) {
+voronoiEdgeFromDelaunayEdge <- function(edgeIndex, Edges, Circumcenters) {
   faces <- unlist(Edges[edgeIndex, c("f1", "f2")])
   face1 <- faces[1L]
   face2 <- faces[2L]
   c1 <- Circumcenters[face1, ]
   if(is.na(face2)){
-    return(cbind(c1, NA))
-    # if(Edges[edgeIndex, "length"] < 0.5) {
-    #   return(cbind(c1, c(0,0))) # NA  
-    # } else {
-    #   M <- (Vertices[Edges[edgeIndex, "i1"], ] + Vertices[Edges[edgeIndex, "i2"], ])/2
-    #   return(cbind(c1, 2*M))
-    # }
+    return(cbind(c1, NA_real_))
   }
   c2 <- Circumcenters[face2, ]
   if(isTRUE(all.equal(c1, c2))){
@@ -59,24 +48,29 @@ voronoiEdgeFromDelaunayEdge <- function(edgeIndex) {
   cbind(c1, c2)
 }
 
-vertexNeighborEdges <- function(vertexId) {
+vertexNeighborEdges <- function(vertexId, Edges) {
   i1 <- Edges[["i1"]]
   i2 <- Edges[["i2"]]
   which((i1 == vertexId) | (i2 == vertexId))
 }
 
-voronoiCell <- function(facetsQuotienter, edgeTransformer){
-  function(tessellation, vertexId){
+VoronoiCell <- function(mesh, facetsQuotienter, edgeTransformer){
+  Edges <- mesh[["edges"]]
+  Faces <- mesh[["faces"]]
+  Circumcenters <- Faces[, c("ccx", "ccy")]
+  function(vertexId){
     delaunayEdges <- facetsQuotienter(
-      unname(vertexNeighborEdges(vertexId))
+      unname(vertexNeighborEdges(vertexId, Edges))
     )
-    voronoiEdges <- Filter(Negate(is.null), lapply(delaunayEdges, function(dedge){
-      voronoiEdgeFromDelaunayEdge(dedge)
-    }))
+    voronoiEdges <- Filter(
+      Negate(is.null), lapply(delaunayEdges, function(dedge){
+        voronoiEdgeFromDelaunayEdge(dedge, Edges, Circumcenters)
+      })
+    )
     nedges <- length(voronoiEdges)
     bounded <- nedges > 0L
     while(nedges > 0L){
-      bounded <- bounded && !anyNA(edges[[nedges]])
+      bounded <- bounded && !anyNA(voronoiEdges[[nedges]])
       nedges <- nedges - 1L
     }
     cell <- edgeTransformer(voronoiEdges)
@@ -85,24 +79,36 @@ voronoiCell <- function(facetsQuotienter, edgeTransformer){
   }
 }
 
-voronoi0 <- function(cellGetter, tessellation) {
-  bounded <- logical(nrow(Vertices))
-  L <- lapply(1L:nrow(Vertices), function(i) {
-    cell <- cellGetter(tessellation, i)
+zip <- function(matrix, list) {
+  lapply(seq_len(nrow(matrix)), function(i) {
+    sets::pair(site = matrix[i, ], cell = list[[i]])
+  })
+}
+
+Voronoi0 <- function(cellGetter, mesh) {
+  vertices <- mesh[["vertices"]]
+  nvertices <- nrow(vertices)
+  bounded <- logical(nvertices)
+  L <- lapply(1L:nvertices, function(i) {
+    cell <- cellGetter(i)
     bounded[i] <<- attr(cell, "bounded")
     cell
   })
-  out <- tessellation:::zip(Vertices, L)
+  out <- zip(vertices, L)
   attr(out, "nbounded") <- sum(bounded)
   out
 }
 
-v <- voronoi0(voronoiCell(identity, identity), NULL)
+Voronoi <- function(tesselation) {
+  mesh <- tesselation[["mesh"]]
+  Voronoi0(VoronoiCell(mesh, identity, identity), mesh)  
+}
 
+v <- Voronoi(d)
 
 library(randomcoloR)
 opar <- par(mar = c(0,0,0,0))
-plot(Vertices*1, type = "n", asp = 1, axes=FALSE, xlab=NA, ylab=NA)
+plot(points*1, type = "n", asp = 1, axes=FALSE, xlab=NA, ylab=NA)
 #plotDelaunay2D(d, asp = 1)
 for(i in seq_along(v)) {
   vi <- v[[i]]
