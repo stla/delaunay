@@ -116,9 +116,10 @@ Voronoi0 <- function(cellGetter, mesh) {
 #' vor <- Voronoi(del)
 #' opar <- par(mar = c(0,0,0,0))
 #' plot(
-#'   points, type = "n", asp = 1, axes = FALSE, xlab = NA, ylab = NA, pch = 19
+#'   NULL, asp = 1, axes = FALSE, xlab = NA, ylab = NA, xlim = c(-1.5, 1.5) 
 #' )
 #' plotVoronoi(vor, luminosity = "dark")
+#' points(points, pch = 19)
 #' par(opar)
 Voronoi <- function(triangulation) {
   if(!inherits(triangulation, "delaunay")){
@@ -162,7 +163,44 @@ Voronoi <- function(triangulation) {
 #' @importFrom randomcoloR randomColor distinctColorPalette
 #' @importFrom scales alpha
 #'
-#' @examples library(delaunay)
+#' @examples 
+#' library(delaunay)
+#' # make vertices
+#' nsides <- 12L
+#' angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
+#' outer_points <- cbind(cos(angles), sin(angles))
+#' inner_points <- outer_points / 4
+#' nsides <- 36L
+#' angles <- seq(0, 2*pi, length.out = nsides+1L)[-1L]
+#' middle_points <- cbind(cos(angles), sin(angles)) / 2
+#' vertices <- rbind(outer_points, inner_points, middle_points)
+#' angles <- angles + pi/36
+#' middle_points <- cbind(cos(angles), sin(angles)) / 3
+#' vertices <- rbind(vertices, middle_points, 2*middle_points)
+#' # constraint edges
+#' indices <- 1L:12L
+#' edges <- cbind(
+#'   indices, c(indices[-1L], indices[1L])
+#' )
+#' edges <- rbind(edges, edges + 12L)
+#' ## | constrained Delaunay triangulation 
+#' del <- delaunay(vertices, constraints = edges)
+#' opar <- par(mar = c(0,0,0,0))
+#' plotDelaunay2D(
+#'   del, type = "n", xlab = NA, ylab = NA, axes = FALSE, asp = 1,
+#'   fillcolor = "random", luminosity = "dark", 
+#'   col_borders = "black", lwd_borders = 3
+#' )
+#' par(opar)
+#' ## | corresponding Voronoï diagram
+#' vor <- Voronoi(del)
+#' opar <- par(mar = c(0,0,0,0))
+#' plot(
+#'   vertices, type = "n", asp = 1, axes = FALSE, xlab = NA, ylab = NA 
+#' )
+#' plotVoronoi(vor, luminosity = "dark")
+#' points(vertices, pch = 19)
+#' par(opar)
 plotVoronoi <- function(
     tessellation, colors = "random", hue = "random", luminosity = "light", 
     alpha = 1, ...

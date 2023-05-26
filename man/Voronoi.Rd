@@ -56,9 +56,10 @@ par(opar)
 vor <- Voronoi(del)
 opar <- par(mar = c(0,0,0,0))
 plot(
-  points, type = "n", asp = 1, axes = FALSE, xlab = NA, ylab = NA, pch = 19
+  NULL, asp = 1, axes = FALSE, xlab = NA, ylab = NA, xlim = c(-1.5, 1.5) 
 )
 plotVoronoi(vor, luminosity = "dark")
+points(points, pch = 19)
 par(opar)
 }
 \seealso{
