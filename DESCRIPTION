@@ -17,6 +17,7 @@ Imports:
     Rcpp (>= 1.0.8),
     rgl,
     Rvcg,
+    scales,
     sets,
     utils
 Suggests: 

@@ -407,9 +407,9 @@ print.delaunay <- function(x, ...){
 #' @param fillcolor controls the filling colors of the triangles, either
 #'   \code{NULL} for no color, a single color, \code{"random"} to get multiple
 #'   colors with \code{\link[randomcoloR]{randomColor}}, or \code{"distinct"}
-#'   get multiple colors with \code{\link[randomcoloR]{distinctColorPalette}}
-#' @param hue,luminosity if \code{color = "random"}, these arguments are passed
-#'   to \code{\link[randomcoloR]{randomColor}}
+#'   to get multiple colors with \code{\link[randomcoloR]{distinctColorPalette}}
+#' @param hue,luminosity if \code{fillcolor = "random"}, these arguments are 
+#'   passed to \code{\link[randomcoloR]{randomColor}}
 #' @param lty_edges,lwd_edges graphical parameters for the edges which are not
 #'   border edges nor constraint edges
 #' @param lty_borders,lwd_borders graphical parameters for the border edges

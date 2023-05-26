@@ -39,10 +39,10 @@ of the constraint edges which are not border edges;
 \item{fillcolor}{controls the filling colors of the triangles, either
 \code{NULL} for no color, a single color, \code{"random"} to get multiple
 colors with \code{\link[randomcoloR]{randomColor}}, or \code{"distinct"}
-get multiple colors with \code{\link[randomcoloR]{distinctColorPalette}}}
+to get multiple colors with \code{\link[randomcoloR]{distinctColorPalette}}}
 
-\item{hue, luminosity}{if \code{color = "random"}, these arguments are passed
-to \code{\link[randomcoloR]{randomColor}}}
+\item{hue, luminosity}{if \code{fillcolor = "random"}, these arguments are 
+passed to \code{\link[randomcoloR]{randomColor}}}
 
 \item{lty_edges, lwd_edges}{graphical parameters for the edges which are not
 border edges nor constraint edges}

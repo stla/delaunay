@@ -48,11 +48,18 @@ del <- delaunay(points, constraints = edges)
 opar <- par(mar = c(0,0,0,0))
 plotDelaunay2D(
   del, type = "n", xlab = NA, ylab = NA, axes = FALSE, asp = 1,
-  luminosity = "dark", col_borders = "black", lwd_borders = 3
+  fillcolor = "random", luminosity = "dark", 
+  col_borders = "black", lwd_borders = 3
 )
 par(opar)
 ## | corresponding Voronoï diagram
 vor <- Voronoi(del)
+opar <- par(mar = c(0,0,0,0))
+plot(
+  points, type = "n", asp = 1, axes = FALSE, xlab = NA, ylab = NA, pch = 19
+)
+plotVoronoi(vor, luminosity = "dark")
+par(opar)
 }
 \seealso{
 \code{\link{plotVoronoi}}
