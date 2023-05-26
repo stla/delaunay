@@ -24,6 +24,13 @@
 ![](https://raw.githubusercontent.com/stla/RCGAL/main/inst/DelaunayExamples/face.png)
 
 
+## Voronoï tessellation
+
+![](https://raw.githubusercontent.com/stla/delaunay/master/inst/images/Voronoi1.png)
+
+![](https://raw.githubusercontent.com/stla/delaunay/master/inst/images/Voronoi2.png)
+
+
 ## 3D Delaunay triangulation
 
 ![](https://raw.githubusercontent.com/stla/delaunay/master/inst/images/del3D.png)
