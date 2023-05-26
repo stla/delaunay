@@ -120,7 +120,7 @@
 #'         The \code{area} field contains only a number: the area
 #'         of the triangulated region.
 #'         Finally, the \code{mesh} field is a list with three fields: 
-#'         \code{vertices}, \code{edges}, \code{faces}.
+#'         \code{vertices}, \code{edges}, and \code{faces}.
 #'         \itemize{
 #'           \item The \code{vertices} field is the same numeric matrix as the 
 #'           \code{points} matrix.
@@ -135,7 +135,7 @@
 #'           columns are integer columns providing the indices of the faces 
 #'           adjacent to the edge. If the edge is a border edge, \code{NA} is 
 #'           reported in the sixth column.
-#'           \item The \code{faces field} is a numeric matrix with three 
+#'           \item The \code{faces} field is a numeric matrix with three 
 #'           columns. In each row \code{i}, the first two columns provide the 
 #'           coordinates of the circumcenter of the face indexed by \code{i}. 
 #'           The third column provides the area of this face.  
