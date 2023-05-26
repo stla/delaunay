@@ -51,19 +51,26 @@ The Delaunay tessellation.
         The \code{area} field contains only a number: the area
         of the triangulated region.
         Finally, the \code{mesh} field is a list with three fields: 
-        \code{vertices}, \code{edges}, \code{faces}. 
-        The \code{vertices} field is the same numeric matrix as the 
-        \code{points} matrix.
-        The \code{edges} field is a dataframe with six columns. The first 
-        two columns provide the edges of the triangulation; they are given 
-        by row, the two integers of a row are the indices of the two points 
-        which form the edge. The third column provides the lengths of the 
-        edges. The fourth column, named \code{border}, is a column of 
-        Boolean values; an edge is labelled by \code{TRUE} if it is a 
-        border edge, that is to say it has only one adjacent face (a face it 
-        belongs to). Finally, the fifth and sixth columns are integer columns 
-        providing the indices of the faces adjacent to the edge. If the edge 
-        is a border edge, \code{NA} is reported in the sixth column.
+        \code{vertices}, \code{edges}, \code{faces}.
+        \itemize{
+          \item The \code{vertices} field is the same numeric matrix as the 
+          \code{points} matrix.
+          \item The \code{edges} field is a dataframe with six columns. The 
+          first two columns provide the edges of the triangulation; they are 
+          given by row, the two integers of a row are the indices of the two 
+          points which form the edge. The third column provides the lengths 
+          of the edges. The fourth column, named \code{border}, is a column 
+          of Boolean values; an edge is labelled by \code{TRUE} in this 
+          column if it is a border edge, that is to say it has only one 
+          adjacent face (a face it belongs to). Finally, the fifth and sixth 
+          columns are integer columns providing the indices of the faces 
+          adjacent to the edge. If the edge is a border edge, \code{NA} is 
+          reported in the sixth column.
+          \item The \code{faces field} is a numeric matrix with three 
+          columns. In each row \code{i}, the first two columns provide the 
+          coordinates of the circumcenter of the face indexed by \code{i}. 
+          The third column provides the area of this face.  
+        }
   \item \strong{If the dimension is 3}, the returned value is a list with
         four fields: \code{cells}, \code{facets}, \code{edges}, and
         \code{volume}. The \code{cells} field represents the tetrahedra
