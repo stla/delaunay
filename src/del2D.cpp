@@ -55,8 +55,8 @@ Rcpp::List del2D_cpp(Rcpp::NumericMatrix pts) {
   }
   //
   return Rcpp::List::create(
-    Rcpp::Named("faces") = Faces,
-    Rcpp::Named("edges") = Edges,
+    Rcpp::Named("faces") = Rcpp::transpose(Faces),
+    Rcpp::Named("edges") = Rcpp::transpose(Edges),
     Rcpp::Named("mesh")  = Rcpp::List::create(
       Rcpp::Named("vertices") = getVertices(mesh),
       Rcpp::Named("edges")    = getEdges(mesh),

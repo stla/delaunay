@@ -96,18 +96,39 @@
 #' @return The Delaunay tessellation.
 #' \itemize{
 #'   \item \strong{If the dimension is 2} and \code{constraints=NULL},
-#'         the returned value is a list with three fields:
-#'         \code{faces}, \code{edges} and \code{area}. The \code{faces} field
-#'         contains an integer matrix with three columns; each row represents a
-#'         triangle whose each vertex is given by the index (row number) of
-#'         this point in the \code{points} matrix. The \code{edges} field
-#'         also contains an integer matrix with three columns. The two first
-#'         integers of a row are the indices of the two points which form the
-#'         edge. The third column, named \code{border}, only contains some
-#'         zeros and some ones; a border (exterior) edge is labelled by a
-#'         \code{1}. The \code{area} field contains only a number: the area
-#'         of the triangulated region (that is, the area of the convex hull of
+#'         the returned value is a list with four fields:
+#'         \code{faces}, \code{edges}, \code{area}, and \code{mesh}. 
+#'         The \code{faces} field is an integer matrix with three columns; 
+#'         each row represents a triangle whose each vertex is given by the 
+#'         index (row number) of this point in the \code{points} matrix. 
+#'         The \code{edges} field also is an integer matrix with three columns. 
+#'         The first two integers of a row are the indices of the two points 
+#'         which form the edge. The third column, named \code{border}, only 
+#'         contains some zeros and some ones; a border (exterior) edge is 
+#'         labelled by a \code{1}. The \code{area} field contains only a number: 
+#'         the area of the triangulated region (that is, the area of the convex hull of
 #'         the points).
+#'         Finally, the \code{mesh} field is a list with three fields: 
+#'         \code{vertices}, \code{edges}, and \code{faces}.
+#'         \itemize{
+#'           \item The \code{vertices} field is the same numeric matrix as the 
+#'           \code{points} matrix.
+#'           \item The \code{edges} field is a dataframe with six columns. The 
+#'           first two columns provide the edges of the triangulation; they are 
+#'           given by row, the two integers of a row are the indices of the two 
+#'           points which form the edge. The third column provides the lengths 
+#'           of the edges. The fourth column, named \code{border}, is a column 
+#'           of Boolean values; an edge is labelled by \code{TRUE} in this 
+#'           column if it is a border edge, that is to say it has only one 
+#'           adjacent face (a face it belongs to). Finally, the fifth and sixth 
+#'           columns are integer columns providing the indices of the faces 
+#'           adjacent to the edge. If the edge is a border edge, \code{NA} is 
+#'           reported in the sixth column.
+#'           \item The \code{faces} field is a numeric matrix with three 
+#'           columns. In each row \code{i}, the first two columns provide the 
+#'           coordinates of the circumcenter of the face indexed by \code{i}. 
+#'           The third column provides the area of this face.  
+#'         }
 #'   \item \strong{If the dimension is 2} and \code{constraints} is not
 #'         \code{NULL}, the returned value is a list with
 #'         four fields: \code{faces}, \code{constraints}, \code{area}, and 
@@ -185,7 +206,7 @@
 #' }
 #' @export
 #' @importFrom rgl tmesh3d 
-#' @importFrom Rvcg vcgGetEdge vcgUpdateNormals
+#' @importFrom Rvcg vcgUpdateNormals
 #'
 #' @examples library(delaunay)
 #' # elevated Delaunay triangulation ####
@@ -280,14 +301,12 @@ delaunay <- function(
     attr(out, "constrained") <- TRUE
     attr(out, "dimension") <- 2
   }else if(dimension == 2L && is.null(constraints)) {
-    out <- del2D_cpp(tpoints)
-    triangles <- out[["faces"]]
-    out[["faces"]] <- t(triangles)
-    out[["area"]] <- delaunayArea(points, out[["faces"]])
-    rglfake <- list(vb = rbind(tpoints, 1), it = triangles)
-    class(rglfake) <- "mesh3d"
-    out[["edges"]] <- `colnames<-`( # replace the cpp out$edges
-      as.matrix(vcgGetEdge(rglfake))[, -3L], c("v1", "v2", "border")
+    result <- del2D_cpp(tpoints)
+    triangles <- result[["faces"]]
+    out <- list(
+      "faces" = triangles,
+      "area"  = delaunayArea(points, triangles),
+      "mesh"  = result[["mesh"]]
     )
     attr(out, "constrained") <- FALSE
     attr(out, "dimension") <- 2
