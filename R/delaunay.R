@@ -634,33 +634,35 @@ mesh2d <- function(triangulation){
       call. = TRUE
     )
   }
-  vertices <- attr(triangulation, "points")
-  if(ncol(vertices) != 2L){
+  dimension <- attr(triangulation, "dimension")
+  if(dimension != 2){
     stop(
-      sprintf("Invalid dimension (%d instead of 2).", ncol(vertices)),
+      sprintf("Invalid dimension (%s instead of 2).", dimension),
       call. = TRUE
     )
   }
+  Mesh <- triangulation[["mesh"]]
+  vertices <- Mesh[["vertices"]]
   vertices <- cbind(vertices, 0)
   mesh <- tmesh3d(
     vertices = t(vertices),
-    indices = t(triangulation[["faces"]])
+    indices  = t(triangulation[["faces"]])
   )
   constraintEdges <- triangulation[["constraints"]]
-  allEdges <- triangulation[["edges"]]
-  borderEdges <- allEdges[allEdges[, "border"] == 1L, c(1L, 2L)]
+  allEdges <- Mesh[["edges"]]
+  borderEdges <- as.matrix(allEdges[allEdges[, "border"], c("i1", "i2")])
   constraints <- NULL
   if(!is.null(constraintEdges)){
     specialEdges <- unionEdges(borderEdges, constraintEdges)
     constraintEdges <- subtractEdges(specialEdges, borderEdges)
     if(!is.null(constraintEdges)){
       constraints <- do.call(rbind, apply(
-        constraintEdges, 1L, function(ij) vertices[ij,], simplify = FALSE
+        constraintEdges, 1L, function(ij) vertices[ij, ], simplify = FALSE
       ))
     }
   }
   borders <- do.call(rbind, apply(
-    borderEdges, 1L, function(ij) vertices[ij,], simplify = FALSE
+    borderEdges, 1L, function(ij) vertices[ij, ], simplify = FALSE
   ))
   list(
     "mesh"            = mesh,

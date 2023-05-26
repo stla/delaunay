@@ -37,8 +37,8 @@ The Delaunay tessellation.
         which form the edge. The third column, named \code{border}, only 
         contains some zeros and some ones; a border (exterior) edge is 
         labelled by a \code{1}. The \code{area} field contains only a number: 
-        the area of the triangulated region (that is, the area of the convex hull of
-        the points).
+        the area of the triangulated region (that is, the area of the convex 
+        hull of the points).
         Finally, the \code{mesh} field is a list with three fields: 
         \code{vertices}, \code{edges}, and \code{faces}.
         \itemize{
