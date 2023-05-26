@@ -232,6 +232,7 @@ plotVoronoi <- function(
         )
       )
     }
+    colors <- scales::alpha(colors, alpha)
   }
   for(i in 1L:ncells){
     cell <- tessellation[[i]][["cell"]]
