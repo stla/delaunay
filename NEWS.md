@@ -1,3 +1,9 @@
+# delaunay 2.0.1 (2024-01-10)
+
+No change. This package has been archived because of an issue with the RcppCGAL 
+package.
+
+
 # delaunay 2.0.0 (2023-05-26)
 
 Voronoï tessellation.
